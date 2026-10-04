@@ -1,5 +1,6 @@
 {
-  "name": "nuxt-app",
+  "name": "dashboard-finance",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,21 +8,19 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck",
+    "test": "node --experimental-strip-types tests/finance.test.ts",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "chart.js": "^4.4.7",
     "nuxt": "^3.15.4",
-    "vue": "latest",
+    "vue": "^3.5.13",
     "vue-chartjs": "^5.3.2",
-    "vue-router": "latest"
+    "vue-router": "^4.5.0"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.13.1",
-    "autoprefixer": "10",
-    "nuxt-icon": "^1.0.0-beta.7",
-    "postcss": "8",
-    "tailwindcss": "3"
+    "typescript": "^5.7.3",
+    "vue-tsc": "^2.2.0"
   }
 }

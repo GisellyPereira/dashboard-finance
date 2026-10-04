@@ -1,75 +1,65 @@
-# Nuxt Minimal Starter
+# Saldo · Dashboard Finance
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Um dashboard para acompanhar entradas, saídas e o saldo do mês. Feito com Vue e Nuxt, com painéis de vidro, tons de azul e lilás e uma interface adaptada para desktop e celular.
 
-## Setup
+[Abrir o Saldo](https://teal-raindrop-900d17.netlify.app/)
 
-Make sure to install dependencies:
+![Relatórios do Saldo](docs/relatorios.png)
+
+## O que dá para fazer
+
+- Cadastrar, editar e excluir receitas e despesas.
+- Escolher o mês e buscar transações por descrição ou categoria.
+- Comparar entradas e saídas dos últimos seis meses.
+- Ver a distribuição das despesas por categoria.
+- Filtrar relatórios e exportar a seleção em CSV.
+- Ocultar valores na interface.
+
+O dashboard começa sem transações. Saldo, relatórios e gráficos são calculados exclusivamente a partir dos registros inseridos pelo usuário. Não há modo de demonstração nem preenchimento automático com dados fictícios.
+
+Os registros ficam no `localStorage` deste navegador. Não há conexão com bancos, login ou sincronização entre dispositivos. Registros válidos da versão anterior continuam sendo carregados. Ao migrar da antiga demonstração, os exemplos são separados dos registros adicionados pelo usuário; uma cópia do conteúdo anterior é preservada no navegador. A exportação CSV permite guardar uma cópia dos dados; a interface ainda não oferece importação.
+
+## Rodar localmente
+
+Requer Node.js 22.6 ou superior.
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+npm ci
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
+O endereço local aparece no terminal. Para escolher uma porta:
 
 ```bash
-# npm
+npm run dev -- --host 127.0.0.1 --port 5190
+```
+
+## Verificação e produção
+
+```bash
+npm test
+npm run typecheck
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Os testes cobrem cálculos em centavos, datas, preservação dos registros, ordenação dos meses, categorias, ordenação das transações e geração de CSV.
+
+## Publicação
+
+O arquivo `netlify.toml` configura Node.js 22, geração estática com `npm run generate` e publicação de `.output/public`. As páginas de visão geral, transações e relatórios são geradas para acesso direto.
+
+## Interface e tecnologias
+
+Vue 3, Nuxt 3, TypeScript, Chart.js e vue-chartjs. A marca vetorial e os componentes visuais são implementados no próprio projeto. A fonte Manrope é servida localmente; sua licença está em `public/fonts/OFL-Manrope.txt`.
+
+As transições respeitam a preferência de movimento reduzido. Os formulários usam diálogo nativo, navegação por teclado e retorno de foco. Os gráficos incluem descrições dos valores para leitores de tela.
+
+<details>
+<summary>Ver a interface no celular</summary>
+
+![Saldo no celular](docs/mobile.jpg)
+
+</details>
+
+Feito por Giselly Pereira.

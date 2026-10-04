@@ -1,9 +1,15 @@
+<script setup lang="ts">
+const { storageNotice } = useTransacoes();
+</script>
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="app-shell">
     <NavBar />
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <main id="conteudo" class="main-content">
+      <p v-if="storageNotice" class="storage-warning" role="status">
+        <AppIcon name="info" />{{ storageNotice }}
+      </p>
       <slot />
     </main>
-    <Footer />
+    <ClientOnly><TransactionEditor /><AppToast /></ClientOnly>
   </div>
 </template>

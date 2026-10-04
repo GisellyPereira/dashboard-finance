@@ -1,84 +1,54 @@
-interface Transacao {
-  id: string
-  nome: string
-  valor: number
-  data: string
-  categoria: string
-  tipo: 'receita' | 'despesa'
-}
+import {
+  categoryTotals,
+  isTransacao,
+  monthSeries,
+  hoje,
+  type NovaTransacao,
+  type Transacao,
+} from "~/utils/finance";
 
 export const useTransacoes = () => {
-  const transacoes = useState<Transacao[]>('transacoes', () => [])
-
-  // Carregar do localStorage ao iniciar
-  onMounted(() => {
-    const saved = localStorage.getItem('transacoes')
-    if (saved) {
-      transacoes.value = JSON.parse(saved)
-    }
-  })
-
-  // Salvar no localStorage quando houver mudanças
-  watch(transacoes, (novasTransacoes) => {
-    localStorage.setItem('transacoes', JSON.stringify(novasTransacoes))
-  }, { deep: true })
-
-  const adicionarTransacao = (transacao: Omit<Transacao, 'id'>) => {
-    transacoes.value.push({
-      ...transacao,
-      id: Date.now().toString()
-    })
+  const transacoes = useState<Transacao[]>("transacoes", () => []);
+  const ready = useState("finance-ready", () => false);
+  const storageNotice = useState("finance-storage-notice", () => "");
+  function adicionarTransacao(dados: NovaTransacao) {
+    const item = {
+      ...dados,
+      nome: dados.nome.trim(),
+      valor: Math.round(dados.valor * 100) / 100,
+      id: crypto.randomUUID(),
+    };
+    if (!isTransacao(item)) throw new Error("Confira os dados da transação.");
+    transacoes.value = [...transacoes.value, item];
   }
-
-  const editarTransacao = (id: string, dados: Partial<Transacao>) => {
-    const index = transacoes.value.findIndex(t => t.id === id)
-    if (index !== -1) {
-      transacoes.value[index] = { ...transacoes.value[index], ...dados }
-    }
+  function editarTransacao(id: string, dados: NovaTransacao) {
+    const item = {
+      ...dados,
+      id,
+      nome: dados.nome.trim(),
+      valor: Math.round(dados.valor * 100) / 100,
+    };
+    if (!isTransacao(item)) throw new Error("Confira os dados da transação.");
+    transacoes.value = transacoes.value.map((old) =>
+      old.id === id ? item : old,
+    );
   }
-
-  const excluirTransacao = (id: string) => {
-    transacoes.value = transacoes.value.filter(t => t.id !== id)
+  function excluirTransacao(id: string) {
+    transacoes.value = transacoes.value.filter((item) => item.id !== id);
   }
-
-  const dadosCategoria = computed(() => {
-    const dados: Record<string, number> = {}
-    
-    transacoes.value
-      .filter(t => t.tipo === 'despesa')
-      .forEach(t => {
-        dados[t.categoria] = (dados[t.categoria] || 0) + t.valor
-      })
-      
-    return Object.entries(dados).map(([categoria, valor]) => ({
-      categoria,
-      valor
-    }))
-  })
-
-  const dadosMensais = computed(() => {
-    const dados: Record<string, number> = {}
-    
-    transacoes.value.forEach(t => {
-      const mes = new Date(t.data).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
-      const valor = t.tipo === 'receita' ? t.valor : -t.valor
-      dados[mes] = (dados[mes] || 0) + valor
-    })
-    
-    return Object.entries(dados)
-      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
-      .map(([mes, valor]) => ({
-        mes,
-        valor
-      }))
-  })
-
   return {
     transacoes,
+    ready,
+    storageNotice,
     adicionarTransacao,
     editarTransacao,
     excluirTransacao,
-    dadosCategoria,
-    dadosMensais
-  }
-} 
+    dadosCategoria: computed(() => categoryTotals(transacoes.value)),
+    dadosMensais: computed(() =>
+      monthSeries(transacoes.value, hoje().slice(0, 7)).map((item) => ({
+        mes: item.label,
+        valor: item.saldo,
+      })),
+    ),
+  };
+};
