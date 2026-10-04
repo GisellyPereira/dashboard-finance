@@ -47,7 +47,7 @@ Os testes cobrem cálculos em centavos, datas, preservação dos registros, orde
 
 ## Publicação
 
-O arquivo `netlify.toml` configura Node.js 22, geração estática com `npm run generate` e publicação de `.output/public`. As páginas de visão geral, transações e relatórios são geradas para acesso direto.
+O arquivo `netlify.toml` configura Node.js 22, geração estática com `npm run generate` e publicação de `.output/public`. O preset `static` é definido explicitamente para manter a mesma pasta de saída no Netlify e no ambiente local. As páginas de visão geral, transações e relatórios são geradas para acesso direto.
 
 ## Interface e tecnologias
 
